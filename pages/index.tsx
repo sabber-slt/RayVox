@@ -25,13 +25,20 @@ export default function Home() {
         <meta property="og:site_name" content="Sabber" />
         <meta property="og:description" content="" />
         <meta property="og:title" content="تبدیل ویدی به متن" />
-        <meta name="image" property="og:image" content="/transcript.jpg" />
+        <meta
+          name="image"
+          property="og:image"
+          content="https://i.pinimg.com/564x/e7/48/cb/e748cb85be2bcade74d4d1cf98c93bc3.jpg"
+        />
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@sabber_dev" />
         <meta name="twitter:title" content="تبدیل ویدیو به متن" />
         <meta name="twitter:description" content="تبدیل ویدیو به متن" />
-        <meta name="twitter:image" content="/transcript.jpg" />
+        <meta
+          name="twitter:image"
+          content="https://i.pinimg.com/564x/e7/48/cb/e748cb85be2bcade74d4d1cf98c93bc3.jpg"
+        />
       </Head>
       {!tokenValue ? <Pop /> : <Audio />}
     </>
