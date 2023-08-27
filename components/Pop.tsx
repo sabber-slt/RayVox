@@ -17,6 +17,7 @@ const Pop = () => {
           w={["80"]}
           py="5"
           bg="gray.200"
+          color="gray.700"
           justify="center"
           rounded="lg"
           boxShadow="xl"
@@ -31,6 +32,7 @@ const Pop = () => {
           <Input
             w="64"
             bg="white"
+            color="gray.700"
             type="text"
             mt="3"
             value={tokenValue}
