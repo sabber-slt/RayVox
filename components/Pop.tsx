@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { Popover, Button, Text, Center, VStack, Input } from "@chakra-ui/react";
 import useToken from "@/store/useToken";
 
-type Props = {};
-
-const Pop = (props: Props) => {
-  const { token, setToken } = useToken();
+const Pop = () => {
+  const { setToken } = useToken();
   const [tokenValue, setTokenValue] = useState("");
 
   const submit = () => {

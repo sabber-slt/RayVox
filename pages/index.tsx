@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Pop from "@/components/Pop";
 
 export default function Home() {
-  const { token, setToken } = useToken();
+  const { token } = useToken();
   const [tokenValue, setTokenValue] = useState(false);
   useEffect(() => {
     if (token) {
@@ -24,7 +24,7 @@ export default function Home() {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Sabber" />
         <meta property="og:description" content="" />
-        <meta property="og:title" content="تبدیل ویدی به متن" />
+        <meta property="og:title" content="تبدیل ویدیو به متن" />
         <meta
           name="image"
           property="og:image"

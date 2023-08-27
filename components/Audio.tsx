@@ -1,27 +1,17 @@
 import React, { useState } from "react";
-import languages from "../languages";
-import { Toaster, toast } from "react-hot-toast";
-import {
-  Text,
-  VStack,
-  Icon,
-  HStack,
-  Input,
-  Select,
-  Button,
-  Center,
-  Box,
-} from "@chakra-ui/react";
-import { FaTwitterSquare } from "react-icons/fa";
+import { Text, VStack, Icon, Input, Button, Center } from "@chakra-ui/react";
 import Link from "next/link";
 import useToken from "@/store/useToken";
+import { Toaster, toast } from "react-hot-toast";
+import { FaTwitterSquare } from "react-icons/fa";
+import { FcDeleteDatabase } from "react-icons/fc";
 
 const Audio = () => {
   const [loading, setLoading] = useState(false);
-  const [language, setLanguage] = useState<string>(languages[0].value);
-  const [generatedTranslation, setGeneratedTranslation] = useState<string>("");
+  const [generatedTranslation, setGeneratedTranslation] = useState<any>("");
+  const [direction, setDirection] = useState<"rtl" | "ltr">("ltr");
   const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
-  const { token } = useToken();
+  const { token, removeToken } = useToken();
 
   const url = "https://api.openai.com/v1/audio/transcriptions";
 
@@ -32,10 +22,8 @@ const Audio = () => {
     }
 
     formData.append("model", "whisper-1");
-    formData.append("response_format", "verbose_json");
-    if (language) {
-      formData.append("language", language);
-    }
+    formData.append("response_format", "json");
+    formData.append("promt", "seprate each line when you want to translate");
 
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${token}`);
@@ -55,8 +43,9 @@ const Audio = () => {
 
     const transcribed = await transcribe();
     console.log(transcribed);
-    console.log(transcribed.text);
-    setGeneratedTranslation(transcribed.text);
+    setGeneratedTranslation(
+      transcribed.text ? transcribed.text : "لطفا توکن را بررسی کنید"
+    );
     setLoading(false);
   };
 
@@ -67,99 +56,72 @@ const Audio = () => {
     }
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
-    const selectedLabel = languages.find(
-      (language) => language.value === selectedValue
-    )?.value;
-    if (selectedLabel) {
-      setLanguage(selectedLabel);
-    }
-  };
-
-  //accept audio and video
-  const fileUrl = "/audio.*";
-
   return (
     <>
+      <Button
+        onClick={removeToken}
+        pos="fixed"
+        top="5"
+        variant={"link"}
+        right="5"
+      >
+        <Icon as={FcDeleteDatabase} w={8} h={8} />
+      </Button>
       <Toaster />
       <VStack justify="center" minH="100vh">
-        <Text fontWeight="bold" fontSize={["xl", "2xl"]}>
-          پلتفرم تبدیل ویدیو به متن
+        <Text fontWeight="bold" fontSize={["xl", "3xl"]}>
+          Video/Audio Transcription
         </Text>
-        <HStack
-          px={["2"]}
-          py={["1"]}
-          borderRadius={["5px"]}
-          border="2px"
-          borderColor="twitter.500"
-        >
+
+        <Link href="https://twitter.com/sabber_dev">
           <Icon as={FaTwitterSquare} w={8} h={8} color="twitter.500" />
-          <Link href="https://twitter.com/">@sabber_dev</Link>
-        </HStack>
-        <Center
-          display="flex"
-          w={["80", "50vw"]}
-          flexDir="column"
-          p="2"
-          py={["5", "10"]}
-        >
-          <Text
-            style={{
-              direction: "rtl",
-            }}
-            fontWeight="bold"
-            fontSize={["sm", "2xl"]}
-          >
-            فرمت های قابل قبول:{" "}
-          </Text>
-          <Text fontWeight="semibold" fontSize={["sm", "md"]}>
-            m4a, mp3, webm, mp4, mpga, wav, mpeg
-          </Text>
+        </Link>
 
-          <Input
-            width={["64"]}
-            pt="1.5"
-            pl="2"
-            type="file"
-            border="2px"
-            mt="5"
-            borderColor="gray.600"
-            // add audio and video
-            accept="audio/*,video/*"
-            onChange={handleFileChange}
-          />
+        <Center display="flex" w={["80", "50vw"]} flexDir="column" p="2">
+          {generatedTranslation === "" && (
+            <>
+              <Text
+                style={{
+                  direction: "rtl",
+                }}
+                fontWeight="bold"
+                fontSize={["sm", "lg"]}
+              >
+                فرمت های قابل قبول:{" "}
+              </Text>
+              <Text fontWeight="semibold" fontSize={["sm", "md"]}>
+                m4a, mp3, webm, mp4, mpga, wav, mpeg
+              </Text>
 
-          <Select
-            width={["64"]}
-            mt="5"
-            border="2px"
-            borderColor="gray.600"
-            onChange={handleChange}
-            value={language}
-          >
-            {languages.map((language) => (
-              <option key={language.value} value={language.value}>
-                {language.label}
-              </option>
-            ))}
-          </Select>
+              <Input
+                width={["64"]}
+                pt="3px"
+                pl="2"
+                type="file"
+                border="2px"
+                mt="5"
+                borderColor="gray.600"
+                accept="audio/*,video/*"
+                onChange={handleFileChange}
+              />
 
-          {!loading && (
-            <Button
-              w="32"
-              h="10"
-              colorScheme="twitter"
-              mt="5"
-              onClick={translateAudio}
-            >
-              Translate &rarr;
-            </Button>
-          )}
-          {loading && (
-            <Button w="32" h="10" colorScheme="twitter" mt="5" disabled>
-              Loading...
-            </Button>
+              {!loading && (
+                <Button
+                  w="32"
+                  h="10"
+                  colorScheme="twitter"
+                  mt="5"
+                  onClick={translateAudio}
+                >
+                  Transcript &rarr;
+                </Button>
+              )}
+              {loading && (
+                <Button w="32" h="10" colorScheme="twitter" mt="5" disabled>
+                  Loading...
+                </Button>
+              )}
+            </>
           )}
 
           {generatedTranslation && (
@@ -168,11 +130,26 @@ const Audio = () => {
                 direction: "ltr",
               }}
             >
+              <Button
+                onClick={() =>
+                  setDirection(direction === "rtl" ? "ltr" : "rtl")
+                }
+                w="14"
+                h="8"
+                fontSize="sm"
+                colorScheme="twitter"
+              >
+                rtl/ltr
+              </Button>
+
               <Text
                 w="full"
                 mt="5"
                 fontSize={["sm", "lg"]}
                 whiteSpace="pre-line"
+                style={{
+                  direction: direction,
+                }}
               >
                 {generatedTranslation}
               </Text>

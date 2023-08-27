@@ -14,14 +14,14 @@ const inter = localFont({
 });
 
 export const theme = extendTheme({
-  itialColorMode: "light",
+  itialColorMode: "dark",
   useSystemColorMode: false,
 
   styles: {
     global: {
       body: {
-        bg: "#fff",
-        color: "#2D3748",
+        bg: "#1A202C",
+        color: "#FFFFFF",
       },
     },
   },

@@ -4,6 +4,7 @@ import { devtools, persist } from "zustand/middleware";
 interface SetUser {
   token: string | null;
   setToken: (token: string) => void;
+  removeToken: () => void;
 }
 
 const useToken = create<SetUser>()(
@@ -12,6 +13,7 @@ const useToken = create<SetUser>()(
       (set) => ({
         token: null,
         setToken: (token: string) => set({ token }),
+        removeToken: () => set({ token: null }),
       }),
 
       {
