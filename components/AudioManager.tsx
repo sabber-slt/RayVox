@@ -242,7 +242,7 @@ export function AudioManager(props: { transcriber: Transcriber }) {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center text-orange-700">
+      <div className="flex flex-col justify-center items-center text-orange-500">
         <div className="flex flex-row items-center justify-center space-x-2 py-2 w-full px-2">
           <UrlTile
             icon={<AnchorIcon />}
@@ -284,13 +284,13 @@ export function AudioManager(props: { transcriber: Transcriber }) {
             />
 
             <SettingsTile
-              className="absolute right-4"
+              className="absolute right-4 text-orange-500"
               transcriber={props.transcriber}
               icon={<SettingsIcon />}
             />
           </div>
           {props.transcriber.progressItems.length > 0 && (
-            <div className="relative z-10 p-4 w-full">
+            <div className="relative z-10 p-4 w-full text-zinc-100">
               <label>Loading model files... (only run once)</label>
               {props.transcriber.progressItems.map((data) => (
                 <div key={data.file}>
@@ -458,7 +458,7 @@ function ProgressBar(props: { progress: string }) {
   return (
     <div className="w-full bg-gray-200 rounded-full h-1 dark:bg-gray-700">
       <div
-        className="bg-blue-600 h-1 rounded-full transition-all duration-100"
+        className="bg-orange-500 h-1 rounded-full transition-all duration-100"
         style={{ width: props.progress }}
       ></div>
     </div>
@@ -724,24 +724,6 @@ function SettingsIcon() {
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-      />
-    </svg>
-  );
-}
-
-function MicrophoneIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"
       />
     </svg>
   );
