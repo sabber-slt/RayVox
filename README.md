@@ -2,7 +2,7 @@
 
 ## **✏️** Introduction
 
-RayVox is a cutting-edge Progressive Web Application (PWA) dedicated to the transcription and translation of audio and video files, ensuring a smooth, accurate, and adaptable experience. Leveraging the advanced Whisper ASR technology. It extends its capabilities by offering translations in various languages and embedding subtitles seamlessly into your media, thanks to ffmpeg WebAssembly. All these features are meticulously designed to function within your browser, ensuring a user-friendly experience.
+RayVox is a cutting-edge Progressive Web Application (PWA) dedicated to the transcription of audio and video files, ensuring a smooth, accurate, and adaptable experience. Leveraging the advanced Whisper ASR technology. All these features are meticulously designed to function within your browser, ensuring a user-friendly experience.
 
 ## ⚡ Note
 
