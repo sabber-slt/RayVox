@@ -6,7 +6,7 @@ export default function Home() {
   const transcriber = useTranscriber();
   return (
     <div className="w-full h-screen center">
-      <div className="w-full lg:w-[50vw] vstack justify-center">
+      <div className="w-full lg:w-[50vw] vstack justify-center text-zinc-700">
         <AudioManager transcriber={transcriber} />
         <Transcript transcribedData={transcriber.output} />
       </div>

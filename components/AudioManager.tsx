@@ -242,11 +242,11 @@ export function AudioManager(props: { transcriber: Transcriber }) {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center rounded-lg bg-white shadow-xl shadow-black/5 ring-1 ring-slate-700/10">
-        <div className="flex flex-row space-x-2 py-2 w-full px-2">
+      <div className="flex flex-col justify-center items-center text-orange-700">
+        <div className="flex flex-row items-center justify-center space-x-2 py-2 w-full px-2">
           <UrlTile
             icon={<AnchorIcon />}
-            text={"From URL"}
+            text={"URL"}
             onUrlUpdate={(e) => {
               props.transcriber.onInputChange();
               setAudioDownloadUrl(e);
@@ -255,7 +255,7 @@ export function AudioManager(props: { transcriber: Transcriber }) {
           <VerticalBar />
           <FileTile
             icon={<FolderIcon />}
-            text={"From file"}
+            text={"file"}
             onFileUpdate={(decoded, blobUrl, mimeType) => {
               props.transcriber.onInputChange();
               setAudioData({
@@ -266,19 +266,6 @@ export function AudioManager(props: { transcriber: Transcriber }) {
               });
             }}
           />
-          {isRecorderAvailable && (
-            <>
-              <VerticalBar />
-              <RecordTile
-                icon={<MicrophoneIcon />}
-                text={"Record"}
-                setAudioData={(e) => {
-                  props.transcriber.onInputChange();
-                  setAudioFromRecording(e);
-                }}
-              />
-            </>
-          )}
         </div>
         {<AudioDataBar progress={isAudioLoading ? progress : +!!audioData} />}
       </div>
@@ -360,14 +347,14 @@ function SettingsModal(props: {
 
   const models = {
     // Original checkpoints
-    "Xenova/whisper-tiny": [41, 152],
-    "Xenova/whisper-base": [77, 291],
-    "Xenova/whisper-small": [249],
-    "Xenova/whisper-medium": [776],
+    "whisper-tiny": [41, 152],
+    "whisper-base": [77, 291],
+    "whisper-small": [249],
+    "whisper-medium": [776],
 
     // Distil Whisper (English-only)
-    "distil-whisper/distil-medium.en": [402],
-    "distil-whisper/distil-large-v2": [767],
+    "distil-medium.en": [402],
+    "distil-large-v2": [767],
   };
   return (
     <Modal
@@ -408,19 +395,6 @@ function SettingsModal(props: {
               ))}
           </select>
           <div className="flex justify-between items-center mb-3 px-1">
-            <div className="flex">
-              <input
-                id="multilingual"
-                type="checkbox"
-                checked={props.transcriber.multilingual}
-                onChange={(e) => {
-                  props.transcriber.setMultilingual(e.target.checked);
-                }}
-              ></input>
-              <label htmlFor={"multilingual"} className="ms-1">
-                Multilingual
-              </label>
-            </div>
             <div className="flex">
               <input
                 id="quantize"
@@ -684,7 +658,7 @@ function Tile(props: {
   return (
     <button
       onClick={props.onClick}
-      className="flex items-center justify-center rounded-lg p-2 bg-blue text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-200"
+      className="flex items-center justify-center rounded-lg p-2 bg-blue text-slate-500 transition-all duration-200"
     >
       <div className="w-7 h-7">{props.icon}</div>
       {props.text && (

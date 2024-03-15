@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 
+// Assuming TranscriberData and formatAudioTimestamp are defined elsewhere
 import { TranscriberData } from "../hooks/useTranscriber";
 import { formatAudioTimestamp } from "../utils/AudioUtils";
 
@@ -18,28 +19,27 @@ export default function Transcript({ transcribedData }: Props) {
     link.click();
     URL.revokeObjectURL(url);
   };
-  const exportTXT = () => {
+
+  const exportSRT = () => {
     let chunks = transcribedData?.chunks ?? [];
-    let text = chunks
-      .map((chunk) => chunk.text)
-      .join("")
-      .trim();
+    let srtContent = chunks
+      .map((chunk, index) => {
+        const startTime =
+          chunk.timestamp[0] !== null
+            ? formatAudioTimestamp(chunk.timestamp[0])
+            : "00:00:00";
+        const endTime =
+          chunk.timestamp[1] !== null
+            ? formatAudioTimestamp(chunk.timestamp[1])
+            : "00:00:00";
+        return `${index + 1}\n${startTime} --> ${endTime}\n${chunk.text}\n`;
+      })
+      .join("\n");
 
-    const blob = new Blob([text], { type: "text/plain" });
-    saveBlob(blob, "transcript.txt");
+    const blob = new Blob([srtContent], { type: "text/plain" });
+    saveBlob(blob, "transcript.srt");
   };
-  const exportJSON = () => {
-    let jsonData = JSON.stringify(transcribedData?.chunks ?? [], null, 2);
 
-    // post-process the JSON to make it more readable
-    const regex = /(    "timestamp": )\[\s+(\S+)\s+(\S+)\s+\]/gm;
-    jsonData = jsonData.replace(regex, "$1[$2 $3]");
-
-    const blob = new Blob([jsonData], { type: "application/json" });
-    saveBlob(blob, "transcript.json");
-  };
-
-  // Scroll to the bottom when the component updates
   useEffect(() => {
     if (divRef.current) {
       const diff = Math.abs(
@@ -49,45 +49,40 @@ export default function Transcript({ transcribedData }: Props) {
       );
 
       if (diff <= 64) {
-        // We're close enough to the bottom, so scroll to the bottom
         divRef.current.scrollTop = divRef.current.scrollHeight;
       }
     }
   });
 
   return (
-    <div
-      ref={divRef}
-      className="w-full flex flex-col my-2 p-4 max-h-[20rem] overflow-y-auto"
-    >
-      {transcribedData?.chunks &&
-        transcribedData.chunks.map((chunk, i) => (
-          <div
-            key={`${i}-${chunk.text}`}
-            className="w-full flex flex-row mb-2 bg-white rounded-lg p-4 shadow-xl shadow-black/5 ring-1 ring-slate-700/10"
-          >
-            <div className="mr-5">
-              {formatAudioTimestamp(chunk.timestamp[0])}
-            </div>
-            {chunk.text}
-          </div>
-        ))}
+    <>
       {transcribedData && !transcribedData.isBusy && (
-        <div className="w-full text-right">
+        <div className="w-full text-center mt-5">
           <button
-            onClick={exportTXT}
-            className="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 inline-flex items-center"
+            onClick={exportSRT}
+            className="text-white w-44 h-12 center bg-orange-500 hover:bg-orange-600 font-medium rounded-lg text-sm text-center inline-flex items-center"
           >
-            Export TXT
-          </button>
-          <button
-            onClick={exportJSON}
-            className="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 inline-flex items-center"
-          >
-            Export JSON
+            Download SRT
           </button>
         </div>
       )}
-    </div>
+      <div
+        ref={divRef}
+        className="w-full flex flex-col my-2 p-4 max-h-[20rem] overflow-y-auto"
+      >
+        {transcribedData?.chunks &&
+          transcribedData.chunks.map((chunk, i) => (
+            <div
+              key={`${i}-${chunk.text}`}
+              className="w-full flex flex-row mb-2 bg-white rounded-lg p-4 shadow-xl shadow-black/5 ring-1 ring-slate-700/10"
+            >
+              <div className="mr-5">
+                {formatAudioTimestamp(chunk.timestamp[0])}
+              </div>
+              {chunk.text}
+            </div>
+          ))}
+      </div>
+    </>
   );
 }
